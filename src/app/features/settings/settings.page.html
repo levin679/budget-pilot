@@ -1,0 +1,7 @@
+<div class="page settings-page"><header class="page-header"><div><h1 class="page-title">Настройки</h1><p class="page-subtitle">Внешний вид, данные и информация о проекте.</p></div></header><section class="settings-list">
+  <article class="card setting"><div><span>◐</span><div><h2>Тема</h2><p>Светлая или тёмная цветовая схема.</p></div></div><button class="btn" (click)="theme.toggle()">{{ theme.dark()?'Светлая':'Тёмная' }}</button></article>
+  <article class="card setting"><div><span>₽</span><div><h2>Валюта</h2><p>Основная валюта интерфейса.</p></div></div><span class="badge">RUB — российский рубль</span></article>
+  <article class="card setting"><div><span>↻</span><div><h2>Сброс данных</h2><p>Восстановить исходные счета, операции и цели.</p></div></div><button class="btn btn-danger" (click)="reset()">Сбросить</button></article>
+  @if(message()){<div class="message">✓ {{ message() }}</div>}
+  <article class="card about"><div class="about-logo">B</div><div><h2>BudgetPilot 1.0</h2><p>Angular-приложение для учёта личных финансов с CSV-обменом, вычисляемыми отчётами и локальным хранением.</p><div><span>Angular 21</span><span>Signals</span><span>Reactive Forms</span><span>CSV parser</span><span>SCSS</span></div></div></article>
+</section></div>

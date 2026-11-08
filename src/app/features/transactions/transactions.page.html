@@ -1,0 +1,21 @@
+<div class="page">
+  <header class="page-header"><div><h1 class="page-title">Операции</h1><p class="page-subtitle">Поиск, фильтрация, ручной ввод и обмен данными в CSV.</p></div><div class="page-actions"><label class="btn file-button">Импорт CSV<input type="file" accept=".csv,text/csv" (change)="importFile($event)"></label><button class="btn" type="button" (click)="exportCsv()">Экспорт CSV</button><button class="btn btn-primary" type="button" (click)="modalOpen.set(true)">+ Операция</button></div></header>
+  @if (importMessage()) { <div class="import-message">{{ importMessage() }} <button type="button" (click)="importMessage.set('')">×</button></div> }
+  <section class="filters card"><label class="search"><span>⌕</span><input class="input" type="search" placeholder="Поиск по описанию или категории" [value]="store.filters().query" (input)="store.setQuery($any($event.target).value)"></label><select class="select" [value]="store.filters().type" (change)="setType($any($event.target).value)"><option value="all">Все типы</option><option value="income">Доходы</option><option value="expense">Расходы</option></select><select class="select" [value]="store.filters().category" (change)="store.setCategory($any($event.target).value)"><option value="all">Все категории</option>@for(category of store.categories();track category){<option [value]="category">{{ category }}</option>}</select><button class="btn btn-sm" type="button" (click)="store.resetFilters()">Сбросить</button></section>
+  <section class="card transactions-card">
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Дата</th><th>Операция</th><th>Категория</th><th>Счёт</th><th>Сумма</th><th></th></tr></thead><tbody>
+      @for(item of store.filteredTransactions();track item.id){<tr><td>{{ item.date | date:'d MMM yyyy':'':'ru-RU' }}</td><td><strong>{{ item.note }}</strong></td><td><span class="badge">{{ item.category }}</span></td><td>{{ item.accountId === 'acc-1' ? 'Основная карта' : item.accountId }}</td><td class="amount" [class.income]="item.type==='income'">{{ item.type==='income'?'+':'−' }}{{ item.amount | currency:'RUB':'symbol-narrow':'1.0-0':'ru-RU' }}</td><td><button class="delete" type="button" aria-label="Удалить" (click)="store.deleteTransaction(item.id)">×</button></td></tr>}
+    </tbody></table></div>
+    @if(store.filteredTransactions().length===0){<app-empty-state icon="⌕" title="Операции не найдены" text="Измените фильтры или добавьте новую операцию."/>}
+  </section>
+</div>
+@if(modalOpen()){
+  <div class="modal-backdrop" (click)="modalOpen.set(false)"><form class="modal" [formGroup]="form" (ngSubmit)="submit()" (click)="$event.stopPropagation()"><div class="modal-head"><h2>Новая операция</h2><button class="icon-btn" type="button" (click)="modalOpen.set(false)">×</button></div><div class="modal-body form-grid">
+    <label class="field"><span>Тип</span><select class="select" formControlName="type" (change)="onFormTypeChange()"><option value="expense">Расход</option><option value="income">Доход</option></select></label>
+    <label class="field"><span>Дата</span><input class="input" type="date" formControlName="date"></label>
+    <label class="field"><span>Категория</span><select class="select" formControlName="category">@for(category of categoriesForForm();track category){<option [value]="category">{{ category }}</option>}</select></label>
+    <label class="field"><span>Сумма</span><input class="input" type="number" min="1" formControlName="amount"></label>
+    <label class="field span-2"><span>Описание</span><input class="input" formControlName="note" placeholder="Например, продукты на неделю">@if(form.controls.note.touched&&form.controls.note.invalid){<small class="field-error">Введите минимум 3 символа.</small>}</label>
+    <label class="field span-2"><span>Счёт</span><select class="select" formControlName="accountId">@for(account of store.accounts();track account.id){<option [value]="account.id">{{ account.name }}</option>}</select></label>
+  </div><div class="modal-actions"><button class="btn" type="button" (click)="modalOpen.set(false)">Отмена</button><button class="btn btn-primary" type="submit">Сохранить</button></div></form></div>
+}

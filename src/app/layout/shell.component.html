@@ -1,0 +1,13 @@
+<div class="shell">
+  <aside class="sidebar" [class.open]="menuOpen()">
+    <a class="brand" routerLink="/dashboard" (click)="close()"><span class="logo">B</span><span><strong>BudgetPilot</strong><small>Умные личные финансы</small></span></a>
+    <nav aria-label="Основная навигация">@for (item of navigation; track item.path) { <a [routerLink]="item.path" routerLinkActive="active" (click)="close()"><span>{{ item.icon }}</span>{{ item.label }}</a> }</nav>
+    <div class="side-tip"><span>Совет месяца</span><strong>Откладывайте сначала</strong><p>Автоперевод 10% дохода помогает формировать привычку.</p></div>
+    <div class="user"><span class="avatar">ИЛ</span><span><strong>Илья Лёвин</strong><small>Личный профиль</small></span></div>
+  </aside>
+  @if (menuOpen()) { <button class="overlay" aria-label="Закрыть меню" (click)="close()"></button> }
+  <main>
+    <header class="topbar"><button class="icon-btn menu" aria-label="Открыть меню" (click)="menuOpen.set(true)">☰</button><div><strong>Финансовый центр</strong><span>Данные хранятся только в вашем браузере</span></div><button class="icon-btn theme" (click)="theme.toggle()" [attr.aria-label]="theme.dark() ? 'Светлая тема' : 'Тёмная тема'">{{ theme.dark() ? '☀' : '◐' }}</button></header>
+    <section class="content"><router-outlet /></section>
+  </main>
+</div>
